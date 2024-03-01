@@ -3,7 +3,6 @@
 namespace App\Filament\Widgets;
 
 use App\Models\PointMarking;
-use App\Models\User;
 use Carbon\Carbon;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
@@ -40,6 +39,14 @@ class StatsOverview extends BaseWidget
             ];
         }
         $userPointMarkings = PointMarking::query()->where('user_id', $user->id)->where('clocking_at', '>=', now()->startOfDay())->where('clocking_at', '<=', now()->endOfDay())->orderBy('clocking_at')->get();
+
+        if ($userPointMarkings->count() === 0) {
+            return [
+                'totalWorkedHours' => '0:00',
+                'extraWorkedHours' => '0:00',
+                'problems' => '',
+            ];
+        }
 
         $start = Carbon::parse($userPointMarkings->first()->clocking_at);
         $end = Carbon::parse($userPointMarkings->last()->clocking_at);

@@ -8,6 +8,7 @@ use App\Models\Review;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -57,6 +58,9 @@ class ReviewResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make()
                 ->label('Inspecionar'),
+                ViewAction::make()
+                    ->label('Anexo')
+                    ->url((fn (Review $record) => $record->attachment)),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
