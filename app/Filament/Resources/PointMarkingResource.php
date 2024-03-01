@@ -49,7 +49,7 @@ class PointMarkingResource extends Resource
                     ->icon(fn (string $state): string => match ($state) {
                         'approved' => 'heroicon-m-check-circle',
                         'rejected' => 'heroicon-c-x-circle',
-                        'pending' => 'heroicon-o-arrow-path',
+                        'pending' => 'heroicon-s-clock',
                     })->color(fn (string $state): string => match ($state) {
                         'rejected' => 'danger',
                         'approved' => 'success',

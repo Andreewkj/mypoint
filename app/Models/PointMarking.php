@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -70,7 +71,13 @@ class PointMarking extends Model
                         ->label('Descricão')
                         ->disabled(fn (string $operation): bool => $operation === 'create')
                         ->required(fn (string $operation): bool => $operation === 'edit')
+                        ->hidden(fn (string $operation): bool => $operation === 'create'),
+                    FileUpload::make('attachment')
+                        ->disk('local')
+                        ->directory('form-attachments')
+                        ->visibility('public')
                         ->hidden(fn (string $operation): bool => $operation === 'create')
+                        ->disabled(fn (string $operation): bool => $operation === 'create'),
                 ]),
         ];
     }

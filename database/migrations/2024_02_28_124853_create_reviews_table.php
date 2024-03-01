@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->ulid('point_marking_id')->nullable();
             $table->foreign('point_marking_id')->references('id')->on('point_markings');
+            $table->text('attachment')->nullable();
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->timestamps();
         });

@@ -35,6 +35,14 @@ class EditPointMarking extends EditRecord
 
     protected function handleRecordUpdate(Model $record, array $data): Model
     {
+        if (auth()->user()->isAdmin()) {
+            unset($data['description']);
+            unset($data['attachment']);
+
+            $record->update($data);
+
+            return $record;
+        }
         $data['status'] = $this->defineStatus($record);
         $dataReview = $this->buildReviewData($data, $record);
 
@@ -52,12 +60,10 @@ class EditPointMarking extends EditRecord
 
     private function HandleUpdateData(array $data, Model $record): void
     {
-        if ($record->status === PointMarking::STATUS_PENDING) {
-            $record->update($data);
-            return;
-        }
         if (auth()->user()->isAdmin()) {
             unset($data['description']);
+            unset($data['attachment']);
+
             $record->update($data);
 
             return;
@@ -70,11 +76,17 @@ class EditPointMarking extends EditRecord
 
     private function buildReviewData(array $data, Model $record): array
     {
+        $dataReview['attachment'] = $data['attachment'];
         $dataReview['description'] = $data['description'];
         $dataReview['clocking_at'] = $data['clocking_at'];
         $dataReview['user_id'] = $record->user_id;
         $dataReview['status'] = Review::STATUS_PENDING;
 
         return $dataReview;
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
     }
 }

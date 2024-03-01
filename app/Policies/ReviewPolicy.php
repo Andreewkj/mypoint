@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\Review;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
+use function Laravel\Prompts\alert;
 
 class ReviewPolicy
 {
@@ -21,7 +22,9 @@ class ReviewPolicy
      */
     public function view(User $user, Review $review): bool
     {
-        return true;
+        return
+            $user->isAdmin() && $review->user->company->id === $user->company_id ||
+            $user->isEmployee() && $review->user->id === $user->id;
     }
 
     /**
@@ -29,7 +32,7 @@ class ReviewPolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        return false;
     }
 
     /**
