@@ -28,4 +28,4 @@ Caso o número de registros esteja errado (ímpar), também será mostrado no da
 ![Screenshot from 2024-03-04 16-38-02](https://github.com/Andreewkj/mypoint/assets/62602623/6e67113c-3b28-4c9e-bae8-a9c9abd1a7d9)
 
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+[MIT license](https://opensource.org/licenses/MIT).
