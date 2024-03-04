@@ -11,7 +11,7 @@ Para obter esses dados basta rodar o comando --seed na frente do comando de migr
 Por padrão o filament possibilita a restringir apenas emails aprovados a fazer login e também verifica se o email do usuário já esta verificado (A criação de usuários implementada já faz esse tratamento).
 Os email disponiveis no projeto são esses ![Screenshot from 2024-03-04 16-51-25](https://github.com/Andreewkj/mypoint/assets/62602623/e4ff3360-b7e7-4e84-9de4-aa6a308a8e09)
 Para modificar esse trecho de código basta ir até o Model User.
-No projeto foi usado a versão 3.0-stable do filament, pois a versão mais recente não configurou corretamente.
+No projeto foi usado a versão 3.0-stable do filament, pois a versão mais recente não configurou corretamente e também laravel 10x. com sail.
 
 
 ## Casos de uso
