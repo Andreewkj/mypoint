@@ -1,66 +1,31 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## Porque do projeto
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Mypoint simula o básico de um aplicativo de RH, onde o funcionário pode registrar suas marcações, pedir que elas sejam revisadas pela empresa e consultar se fez hora extra ao final do dia.
+O projeto foi feito com o objetivo de conhecer os recursos disponilizados pelo filament, e fixar as principais features.
 
-## About Laravel
+## Explicações sobre o funcionamento
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+O app tem 3 níveis de permissão ``` Master, Admin, Employee ```.
+O usuário Master atualmente na seeder é andreew@onhappy.com, junto com duas empresas.
+Para obter esses dados basta rodar o comando --seed na frente do comando de migration ```sail artisan migrate:fresh --seed ```.
+Por padrão o filament possibilita a restringir apenas emails aprovados a fazer login e também verifica se o email do usuário já esta verificado (A criação de usuários implementada já faz esse tratamento).
+Os email disponiveis no projeto são esses ![Screenshot from 2024-03-04 16-51-25](https://github.com/Andreewkj/mypoint/assets/62602623/e4ff3360-b7e7-4e84-9de4-aa6a308a8e09)
+Para modificar esse trecho de código basta ir até o Model User.
+No projeto foi usado a versão 3.0-stable do filament, pois a versão mais recente não configurou corretamente.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Casos de uso
+Um usuário master pode criar outros usuários e editar (Caso passe a senha vazia na edição, a senha atual do usuário será mantida)
+![Screenshot from 2024-03-04 17-00-27](https://github.com/Andreewkj/mypoint/assets/62602623/265d4462-c4ab-43dc-beaa-52d9e061a05e)
 
-## Learning Laravel
+Um usuário ADM, pode aprovar e reprovar revisões de ponto dos usuário de primeiro nivel, pode bater seu próprio ponto e para editar pontos de sua empresa, não precisa de aprovação.
+Ele só pode visualizar os usuário que estão cadastrados em sua empresa, porém quem edita é só o master.
+![Screenshot from 2024-03-04 17-03-45](https://github.com/Andreewkj/mypoint/assets/62602623/f93539b3-933f-46ca-a554-272c4bd13e9a)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+O usuário de primeiro nivel tem acesso as horas que trabalhou através dos widges no menu de dashboard.
+As horas são contabilizadas apenas se o usuário registrou no minimo 4 marcações no dia, e será descontado do total 1 hora de almoço.
+Caso o número de registros esteja errado (ímpar), também será mostrado no dashboard.
+![Screenshot from 2024-03-04 16-38-02](https://github.com/Andreewkj/mypoint/assets/62602623/6e67113c-3b28-4c9e-bae8-a9c9abd1a7d9)
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
