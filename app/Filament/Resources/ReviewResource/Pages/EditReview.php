@@ -52,4 +52,9 @@ class EditReview extends EditRecord
 
         return parent::mutateFormDataBeforeFill($data);
     }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 }

@@ -3,6 +3,12 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Split;
+use Filament\Forms\Components\TextInput;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -68,9 +74,11 @@ class User extends Authenticatable implements FilamentUser
 
     private function allowedEmail(): bool
     {
+
         $emails = [
             '@onhappy.com',
-            '@smart.com',
+            '@marvel.com',
+            '@spider.com',
         ];
 
         $this->email = strtolower($this->email);
@@ -107,5 +115,63 @@ class User extends Authenticatable implements FilamentUser
     public function isMaster(): bool
     {
         return $this->role === self::ROLE_MASTER;
+    }
+
+    public static function getForm(): array
+    {
+        return [
+            Split::make([
+                Section::make('Criação de usuário')
+                    ->columns(2)
+                    ->collapsible(true)
+                    ->schema([
+                        TextInput::make('name')
+                            ->label('Nome')
+                            ->columnSpanFull()
+                            ->required(),
+                        DatePicker::make('hired_at')
+                            ->label('Contratação')
+                            ->displayFormat('d/m/Y')
+                            ->columnSpan(1)
+                            ->required()
+                            ->native(false),
+                        TextInput::make('email')
+                            ->label('Email')
+                            ->required()
+                            ->email()
+                            ->unique(ignoreRecord: true)
+                            ->columnSpan(1),
+                        TextInput::make('password')
+                            ->label('Password')
+                            ->password()
+                            ->revealable(false)
+                            ->default('1234')
+                            ->columnSpan(1),
+                        Select::make('company_id')
+                            ->label('Empresa')
+                            ->relationship('company', 'name')
+                            ->required(),
+                    ]),
+                Section::make('Profile')
+                    ->columns(2)
+                    ->schema([
+                        FileUpload::make('image')
+                            ->label('Imagem de Perfil')
+                            ->avatar()
+                            ->columns(1)
+                            ->imageEditor(),
+                        Select::make('role')
+                            ->label('Permissão')
+                            ->options([
+                                'admin' => 'ADM',
+                                'master' => 'Master',
+                                'employee' => 'User',
+                            ])
+                            ->default('employee')
+                            ->columns(1)
+                            ->required(),
+                    ]),
+            ])->columnSpanFull(),
+        ];
     }
 }

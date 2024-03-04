@@ -5,7 +5,6 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\PointMarkingResource\Pages;
 use App\Filament\Resources\PointMarkingResource\RelationManagers;
 use App\Models\PointMarking;
-use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -14,14 +13,14 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class PointMarkingResource extends Resource
 {
     protected static ?string $model = PointMarking::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    public static ?string $label = 'Marcações';
 
     public static function form(Form $form): Form
     {
@@ -46,6 +45,7 @@ class PointMarkingResource extends Resource
                     ->label('Empresa')
                     ->color('danger'),
                 IconColumn::make('review.status')
+                    ->label('Status da revisão')
                     ->icon(fn (string $state): string => match ($state) {
                         'approved' => 'heroicon-m-check-circle',
                         'rejected' => 'heroicon-c-x-circle',
@@ -72,8 +72,8 @@ class PointMarkingResource extends Resource
                     })
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                ->label('Editar'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -105,6 +105,13 @@ class PointMarkingResource extends Resource
                 ->join('users', 'users.id', '=', 'point_markings.user_id')
                 ->join('companies', 'companies.id', '=', 'users.company_id')
                 ->where('companies.id', auth()->user()->company->id)
+                ->select('point_markings.*');
+        }
+
+        if (auth()->user()->role === 'master') {
+            return parent::getEloquentQuery()
+                ->join('users', 'users.id', '=', 'point_markings.user_id')
+                ->join('companies', 'companies.id', '=', 'users.company_id')
                 ->select('point_markings.*');
         }
 

@@ -8,7 +8,7 @@ use App\Models\Review;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Actions\ViewAction;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\Builder;
 class ReviewResource extends Resource
 {
     protected static ?string $model = Review::class;
+
+    public static ?string $label = 'Revisões';
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -34,7 +36,7 @@ class ReviewResource extends Resource
                     ->dateTime('d/m/Y H:i')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('description')
-                    ->label('Description'),
+                    ->label('Descricão'),
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('Usuário')
                     ->searchable(true),
@@ -42,6 +44,7 @@ class ReviewResource extends Resource
                     ->label('Empresa')
                     ->color('danger'),
                 IconColumn::make('status')
+                    ->label('Status')
                     ->icon(fn (string $state): string => match ($state) {
                         'approved' => 'heroicon-m-check-circle',
                         'rejected' => 'heroicon-c-x-circle',
@@ -58,9 +61,11 @@ class ReviewResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make()
                 ->label('Inspecionar'),
-                ViewAction::make()
-                    ->label('Anexo')
-                    ->url((fn (Review $record) => $record->attachment)),
+                Action::make('Anexo')
+                    ->url(fn (Review $record): string => asset('storage/' . $record->attachments))
+                    ->icon('heroicon-o-photo')
+                    ->color('light')
+                    ->openUrlInNewTab()
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -92,6 +97,14 @@ class ReviewResource extends Resource
                 ->join('users', 'users.id', '=', 'user_id')
                 ->join('companies', 'companies.id', '=', 'users.company_id')
                 ->where('companies.id', auth()->user()->company->id)
+                ->where('status', '=', Review::STATUS_PENDING)
+                ->select('reviews.*');
+        }
+
+        if (auth()->user()->role === 'master') {
+            return parent::getEloquentQuery()
+                ->join('users', 'users.id', '=', 'user_id')
+                ->join('companies', 'companies.id', '=', 'users.company_id')
                 ->where('status', '=', Review::STATUS_PENDING)
                 ->select('reviews.*');
         }

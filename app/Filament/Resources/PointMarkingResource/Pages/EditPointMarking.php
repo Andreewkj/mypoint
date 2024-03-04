@@ -37,7 +37,7 @@ class EditPointMarking extends EditRecord
     {
         if (auth()->user()->isAdmin()) {
             unset($data['description']);
-            unset($data['attachment']);
+            unset($data['attachments']);
 
             $record->update($data);
 
@@ -62,7 +62,7 @@ class EditPointMarking extends EditRecord
     {
         if (auth()->user()->isAdmin()) {
             unset($data['description']);
-            unset($data['attachment']);
+            unset($data['attachments']);
 
             $record->update($data);
 
@@ -76,7 +76,7 @@ class EditPointMarking extends EditRecord
 
     private function buildReviewData(array $data, Model $record): array
     {
-        $dataReview['attachment'] = $data['attachment'];
+        $dataReview['attachments'] = $data['attachments'];
         $dataReview['description'] = $data['description'];
         $dataReview['clocking_at'] = $data['clocking_at'];
         $dataReview['user_id'] = $record->user_id;

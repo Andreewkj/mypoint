@@ -2,33 +2,36 @@
 
 namespace App\Policies;
 
-use App\Models\Review;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
-use function Laravel\Prompts\alert;
 
-class ReviewPolicy
+class UserPolicy
 {
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        return true;
+        if ($user->isMaster() || $user->isAdmin()) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Review $review): bool
+    public function view(User $user, User $model): bool
     {
         if ($user->isMaster()) {
             return true;
         }
 
-        return
-            $user->isAdmin() && $review->user->company->id === $user->company_id ||
-            $user->isEmployee() && $review->user->id === $user->id;
+        if ($user->isAdmin() && $user->company_id === $model->company_id) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -36,33 +39,49 @@ class ReviewPolicy
      */
     public function create(User $user): bool
     {
+        if ($user->isMaster()) {
+            return true;
+        }
+
         return false;
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Review $review): bool
+    public function update(User $user, User $model): bool
     {
         if ($user->isMaster()) {
             return true;
         }
 
-        return $user->isAdmin() && $review->user->company->id === $user->company_id;
+        if ($user->isAdmin() && $model->company_id === $user->company_id) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Review $review): bool
+    public function delete(User $user, User $model): bool
     {
-        return $user->isMaster();
+        if ($user->isMaster()) {
+            return true;
+        }
+
+        if ($user->isAdmin() && $model->company_id === $user->company_id) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Review $review): bool
+    public function restore(User $user, User $model): bool
     {
         if ($user->isMaster()) {
             return true;
@@ -74,11 +93,12 @@ class ReviewPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Review $review): bool
+    public function forceDelete(User $user, User $model): bool
     {
         if ($user->isMaster()) {
             return true;
         }
+
         return false;
     }
 }

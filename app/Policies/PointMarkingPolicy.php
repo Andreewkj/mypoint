@@ -63,7 +63,10 @@ class PointMarkingPolicy
      */
     public function restore(User $user, PointMarking $pointMarking): bool
     {
-        return true;
+        if ($user->isMaster()) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -71,6 +74,10 @@ class PointMarkingPolicy
      */
     public function forceDelete(User $user, PointMarking $pointMarking): bool
     {
-        return true;
+        if ($user->isMaster()) {
+            return true;
+        }
+
+        return false;
     }
 }
